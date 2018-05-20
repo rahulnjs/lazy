@@ -20,7 +20,6 @@ import com.lazy.rs.util.Util;
 public class JSONProcessor {
 
 	private enum OType {OBJECT, LIST, MAP, SET}
-	
 	/**
 	 * 
 	 * @param o object which is being converted to JSON String.
