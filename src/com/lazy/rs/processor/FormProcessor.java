@@ -5,6 +5,7 @@ import java.lang.reflect.Method;
 import java.util.Map;
 
 import com.lazy.rs.util.Util;
+import com.lazy.rs.util.HttpServletRequest;
 
 
 /**
@@ -16,18 +17,19 @@ import com.lazy.rs.util.Util;
 public class FormProcessor {
 	/**
 	 * Creates a bean for an HTML form which is being submitted.
-	 * @param map represents javax.servlet.http.HttpServletRequest.getParameterMap()
+	 * @param request represents javax.servlet.http.HttpServletRequest
 	 * @param beanClass The type of object that is to be returned.
 	 * @return Object of type beanClass.
 	 */
-	public Object toBean(Map<String, String[]> map, Class<?> beanClass) {
+	public Object toBean(HttpServletRequest request, Class<?> beanClass) {
 		try {
+			Map<String, String[]> map = request.getParameterMap();
 			Object targetObj = beanClass.newInstance();
 			Field[] fields = beanClass.getDeclaredFields();
 			for (Field field : fields) {
 				Method method = beanClass.getMethod(Util.setterName(field.getName()), field.getType());
 				String[] fieldvalue = map.get(field.getName());
-				if(fieldvalue != null) {		
+				if(fieldvalue != null) {
 					method.invoke(targetObj, Util.getParsedValue(
 							normalizeArray(fieldvalue), field.getType().getName()));
 				}
@@ -46,11 +48,11 @@ public class FormProcessor {
 				noramlized += ",";
 			}
 			noramlized += arr[i];
-			
+
 		}
 		return noramlized;
 	}
 
-	
+
 
 }

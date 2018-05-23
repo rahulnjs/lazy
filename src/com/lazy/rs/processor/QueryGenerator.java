@@ -25,7 +25,7 @@ import com.lazy.rs.util.Util;
 
 
 public class QueryGenerator {
-	
+
 	private static Map<String, Metadata> cache = new Hashtable<String, Metadata>();
 
 	/**
@@ -36,7 +36,7 @@ public class QueryGenerator {
 	public String getInsertQuery(Class<?> targetClass) {
 		return query(targetClass, QueryType.INSERT);
 	}
-	
+
 	/**
 	 * Gets the Update query for PreparedStatement for the class represented by targetClass.
 	 * @param targetClass class for which the update query to be created.
@@ -45,18 +45,18 @@ public class QueryGenerator {
 	public String getUpdateQuery(Class<?> targetClass) {
 		return query(targetClass, QueryType.UPDATE);
 	}
-	
+
 	/**
 	 * Returns generated metadata for class.
 	 * @param className the full qualified name of the class
 	 * @return metadata, for the given class.
 	 * 		   null, if metadata is not generated yet.
-	 * 
+	 *
 	 */
 	public Metadata getMetadata(String className) {
 		return cache.get(className);
 	}
-	
+
 	private String query(Class<?> targetClass, QueryType type) {
 		Metadata meta = cache.get(targetClass.getName());
 		if(meta == null) {
@@ -64,9 +64,9 @@ public class QueryGenerator {
 			cache.put(targetClass.getName(), meta);
 		}
 		return type == QueryType.INSERT ? meta.getInsertQuery() : meta.getUpdateQuery();
-		
+
 	}
-	
+
 	private Metadata generateMetadata(Class<?> targetClass) {
 		Metadata meta = new Metadata();
 		meta.setTableName(getTableName(targetClass));
@@ -80,15 +80,15 @@ public class QueryGenerator {
 			meta.setSequnce(id.sequence());
 			meta.setPrimaryKey(pk);
 		} catch (Exception e) {
-			
+
 		}
 		generateInsertQuery(targetClass, meta);
 		generateUpdateQuery(targetClass, meta);
 		System.out.println(meta);
 		return meta;
 	}
-	
-	
+
+
 	private String getIdForThisClass(Class<?> targetClass) {
 		Field[] fields = targetClass.getDeclaredFields();
 		for(Field f : fields) {
@@ -96,10 +96,10 @@ public class QueryGenerator {
 				return f.getName();
 			}
 		}
-		return null; 
-		
+		return null;
+
 	}
-	
+
 	private void generateInsertQuery(Class<?> targetClass, Metadata meta) {
 		Field[] fields = targetClass.getDeclaredFields();
 		String qPart1 = "INSERT INTO " + meta.getTableName() + "(";
@@ -120,16 +120,16 @@ public class QueryGenerator {
 					qPart2 += ", ";
 				} else {
 					if(idAt != -1) {
-						qPart1 += ", " + fields[idAt].getName().toUpperCase(); 
+						qPart1 += ", " + fields[idAt].getName().toUpperCase();
 					}
 					qPart1 += ")"; qPart2 += ")";
 				}
 			}
-			
+
 		}
 		meta.setInsertQuery(qPart1 + qPart2);
 	}
-	
+
 	private void generateUpdateQuery(Class<?> targetClass, Metadata meta) {
 		String q = null;
 		try {
@@ -158,18 +158,18 @@ public class QueryGenerator {
 	private boolean hasIgnoreAnnotation(Field f) {
 		return f.getAnnotation(Ignore.class) != null;
 	}
-	
+
 	private  String getTableName(Class<?> c) {
 		return c.getAnnotation(Table.class).value();
 	}
-	
-	
+
+
 	/**
 	 * Populates the PreparedStatement depending on the obj.
 	 * @param ps PreparedStatement to populate.
 	 * @param obj Object for which the PreparedStatement is created.
 	 * @param type INSERT or UPDATE, used to determine if a new id to be generated
-	 * 		  during insertion of an object. 
+	 * 		  during insertion of an object.
 	 * @throws SQLException
 	 */
 	public void doPopulate(PreparedStatement ps, Object obj, QueryType type) throws SQLException {
@@ -203,16 +203,16 @@ public class QueryGenerator {
 					try {
 						meth.invoke(obj, idVal);
 					} catch (IllegalAccessException e) {
-						
+
 					} catch (IllegalArgumentException e) {
 						
 					} catch (InvocationTargetException e) {
-						
+
 					}
 
 				} catch (NoSuchMethodException e) {
 					System.out.println(e);
-				} 
+				}
 				catch (SecurityException e) {
 					System.out.println(e);
 				}
@@ -220,7 +220,7 @@ public class QueryGenerator {
 		}
 		ps.setObject(colIndex, idVal);
 	}
-	
+
 	private String getNextValueForSequence(Connection con, String seqName) {
 		String nxtVal = null;
 		try {
@@ -228,13 +228,13 @@ public class QueryGenerator {
 			rs.next();
 			nxtVal = rs.getString(1);
 			rs.close();
-		} catch (Exception e) {	
+		} catch (Exception e) {
 			System.out.println(e);
 		}
 		return nxtVal;
 	}
 
-	
+
 
 
 
