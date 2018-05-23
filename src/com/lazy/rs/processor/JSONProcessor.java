@@ -258,7 +258,6 @@ public class JSONProcessor {
 	
 	
 	private boolean isPrimitive(String type) {
-		System.out.println(type);
 		String primitive = "boolean_String_integer_float_double_long_short_byte_char";
 		type = type.substring(type.lastIndexOf('.') + 1).toLowerCase();
 		return primitive.contains(type);
