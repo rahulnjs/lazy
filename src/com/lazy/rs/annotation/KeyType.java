@@ -7,5 +7,5 @@ package com.lazy.rs.annotation;
  *
  */
 public enum KeyType {
-	SEQUENCE, ASSIGNED
+	SEQUENCE, ASSIGNED, NATIVE
 }

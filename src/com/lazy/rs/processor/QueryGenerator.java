@@ -14,6 +14,7 @@ import com.lazy.rs.annotation.Id;
 import com.lazy.rs.annotation.Ignore;
 import com.lazy.rs.annotation.KeyType;
 import com.lazy.rs.annotation.Table;
+import com.lazy.rs.util.DBVendor;
 import com.lazy.rs.util.Metadata;
 import com.lazy.rs.util.Util;
 
@@ -27,6 +28,20 @@ import com.lazy.rs.util.Util;
 public class QueryGenerator {
 
 	private static Map<String, Metadata> cache = new Hashtable<String, Metadata>();
+	private DBVendor vendor;
+	private static QueryGenerator qg;
+	
+	private QueryGenerator(DBVendor vendor) {
+		this.vendor = vendor;
+	}
+	
+	public static QueryGenerator getQG(DBVendor vendor) {
+		if(qg == null) {
+			qg = new QueryGenerator(vendor);
+		}
+		return qg;
+	}
+	
 
 	/**
 	 * Gets the Insert query for PreparedStatement for the class represented by targetClass.
@@ -109,21 +124,24 @@ public class QueryGenerator {
 			if(!hasIgnoreAnnotation(fields[i])) {
 				if(!fields[i].getName().equals(meta.getPrimaryKey())) {
 					qPart1 += fields[i].getName().toUpperCase();
+					qPart2 += "?";
 					if(i != fields.length - 1) {
 						qPart1 += ", ";
+						qPart2 += ", ";
 					}
 				} else {
 					idAt = i;
 				}
-				qPart2 += "?";
-				if(i != fields.length - 1) {
-					qPart2 += ", ";
-				} else {
-					if(idAt != -1) {
+				if(i == fields.length - 1) {
+					System.out.print(vendor + "  ");
+					if(idAt != -1 && vendor != DBVendor.MYSQL) {
+						System.out.println("still here");
 						qPart1 += ", " + fields[idAt].getName().toUpperCase();
+						qPart2 += ", ?";
 					}
 					qPart1 += ")"; qPart2 += ")";
 				}
+				
 			}
 
 		}
@@ -196,18 +214,14 @@ public class QueryGenerator {
 			if(pkF != null) { //Set the generated id to object.
 				try {
 					Method meth = targetClass.getMethod(Util.setterName(pkF.getName()), pkF.getType());
-					System.out.println("Method for primary key: " + meth);
 					if(pkF.getType().getName().equals("int") || pkF.getType().getName().equals("Integer")) {
 						idVal = Integer.parseInt((String)idVal);
 					}
 					try {
 						meth.invoke(obj, idVal);
 					} catch (IllegalAccessException e) {
-
-					} catch (IllegalArgumentException e) {
-						
+					} catch (IllegalArgumentException e) {						
 					} catch (InvocationTargetException e) {
-
 					}
 
 				} catch (NoSuchMethodException e) {
@@ -216,9 +230,11 @@ public class QueryGenerator {
 				catch (SecurityException e) {
 					System.out.println(e);
 				}
+				ps.setObject(colIndex, idVal);
 			}
+		} else {
+			ps.setObject(colIndex, idVal);
 		}
-		ps.setObject(colIndex, idVal);
 	}
 
 	private String getNextValueForSequence(Connection con, String seqName) {

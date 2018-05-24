@@ -237,7 +237,7 @@ public class JSONProcessor {
 			map.put(parts[0], new String[] {parts[1]});
 		}
 		
-		return form.toBean(map, targetClass);
+		return null;//form.toBean(map, targetClass);
 	}
 	
 	

@@ -4,8 +4,9 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import com.lazy.rs.util.Util;
-import com.lazy.rs.util.HttpServletRequest;
 
 
 /**

@@ -67,3 +67,21 @@ body {
 
 
 }
+
+
+span.h1 {
+  font-size: 1.6rem;
+}
+
+
+.text {
+  line-height: 1.4;
+  font-size: 15px;
+  color:#424949;
+  padding-top: 20px;
+}
+
+.text header {
+  font-size: 1.6rem;
+  margin-bottom: 15px;
+}

@@ -17,7 +17,7 @@ import java.lang.annotation.Target;
 public @interface Id {
 	/**
 	 * @return name of the sequence for the field which is being declared as @Id 
-	 */
+	 */ 
 	String sequence();
 	
 	/**
