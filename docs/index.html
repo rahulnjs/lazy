@@ -6,6 +6,7 @@
   <title>Lazy API</title>
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/simple-grid.css">
+  <link rel="stylesheet" href="css/prism.css">
 </head>
 
 <body>
@@ -62,11 +63,23 @@
           To use Lazy download the latest jar and add it to your classpath.
         </div>
 
+<pre><code class="language-java">public static void main(String[] args) throws SQLException {
+    Connection con = getMySqlCon();
+	OrmTabMS test = new OrmTabMS();
+	test.setTabId(1);
+	test.setUserName("Boom");
+	test.setPass("rootrs");
+	Lazy lazy = new Lazy(con);
+	System.out.println(lazy.update(test));
+	con.close();
+}
+</code></pre>
+
       </div>
     </div>
   </div>
 
-
+  <script src="js/prism.js"></script>
 
 
 </body>
