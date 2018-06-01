@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/simple-grid.css">
   <link rel="stylesheet" href="css/prism.css">
+  <link rel="icon" href="asset/logo.png">
 </head>
 
 <body>
@@ -18,12 +19,12 @@
     </section>
 
     <section class="down-link">
-      <a href="lib/lazy-2.0.jar">
+      <a href="lib/lazy-3.0.jar">
         <div class="dwn-btn">
           <div style="display: inline-block; width: 20px;">
             <img src="asset/dwn-logo.svg" style="width: 13px; height:13px;">
           </div>
-          lazy-2.0.jar
+          lazy-3.0.jar
         </div>
       </a>
     </section>
@@ -33,13 +34,19 @@
   <div class="container">
     <div class="row">
       <div class="col-3 menu">
-        Menu
         <ul>
           <li><a href="#about">About</a></li>
           <li><a href="#getting-started">Getting Started</a></li>
-          <li><a href="#examples">Examples</a></li>
-          <li><a href="#">Contribution</a></li>
-          <li><a href="#">Help</a></li>
+          <li><a href="#examples">Examples</a>
+            <ul style="padding-left: 20px; margin-top: 3px;">
+              <li><a href="#exmp-init">Initialization</a></li>
+              <li><a href="#exmp-sbp">Bean Persistence</a></li>
+              <li><a href="#exmp-select">Select Queries</a></li>
+              <li><a href="#exmp-rsr">ResultSetReader</a></li>
+              <li><a href="#exmp-jp">JSONProcessor</a></li>
+              <li><a href="#exmp-fp">FormProcessor</a></li>
+            </ul>
+          </li>
         </ul>
       </div>
       <div class="col-9 content">
@@ -65,7 +72,7 @@
 
 
         <div id="examples" class="text">
-          <div class="code-sample">
+          <div class="code-sample" id="exmp-init">
             <header>
               Examples > Initialization
             </header>
@@ -92,7 +99,7 @@ Lazy lazy = new Lazy(con);
             </div>
           </div>
 
-          <div class="code-sample">
+          <div class="code-sample" id="exmp-sbp">
             <header>
               Examples > Simple Bean Persistence
             </header>
@@ -111,31 +118,14 @@ public class OrmTabMS {
   private String userName;
   private String pass;
 
-
-
   public String getUserName() {
 	  return userName;
   }
 
-  public void setUserName(String userName) {
-	  this.userName = userName;
-  }
-
-  public String getPass() {
-    return pass;
-  }
-
-  public void setPass(String pass) {
-  	this.pass = pass;
-  }
-
-  public int getTabId() {
-  	return tabId;
-  }
-
-  public void setTabId(int tabId) {
-  	this.tabId = tabId;
-  }
+  // ....
+  // ....
+  // ....
+  // other setters and getters
 
 }
 </code></pre>
@@ -198,11 +188,12 @@ private String foo;
 
 
 
-          <div class="code-sample">
+          <div class="code-sample" id="exmp-select">
             <header>
             Examples > Select Queries
             </header>
             <div class="desc">
+            Only simple objects can be retrieved from database.
 <pre><code class="language-java">//Returns list of objects.
 lazy.selectMany("select * from orm_tab_a", OrmTabMS.class)
 
@@ -217,7 +208,106 @@ lazy.selectOne("select * from orm_tab_a", OrmTabMS.class)
           </div>
 
 
+          <div class="code-sample" id="exmp-rsr">
+            <header>
+            Examples > ResultSetReader
+            </header>
+            <div class="desc">
+              With Simple JDBC we do something like,
+<pre><code class="language-java">Connection con = getConnection();
+Statement stmt = con.createStatement();
+ResultSet rs = stmt.executeQuery("select *from orm_tab_a");
+List&lt;OrmTabMS&gt; list = new ArrayList&lt;OrmTabMS&gt;();
+while(rs.next()) {
+  OrmTabMS orm = new OrmTabMS();
+	orm.setPass(rs.getString("pass"));
+	orm.setTabId(rs.getInt(1));
+	orm.setUserName(rs.getString("userName"));
+	list.add(orm);
+}</code></pre>
+              <footer class="bottom-text">
+              </footer>
+            </div>
 
+            <div class="desc">
+              With Lazy we can get rid of all the boiler plate code,
+<pre><code class="language-java">ResultSetReader rsr = new ResultSetReader();
+while(rs.next()) {
+	list.add((OrmTabMS)rsr.toBean(rs, OrmTabMS.class));
+}</code></pre>
+              <footer class="bottom-text">
+              </footer>
+            </div>
+          </div>
+
+
+
+          <div class="code-sample" id="exmp-jp">
+            <header>
+            Examples > JSONProcessor
+            </header>
+            <div class="desc">
+              JSONProcessor class helps in converting Java objects to JSON strings.
+              <pre><code class="language-java">OrmTabMS orm = new OrmTabMS();
+orm.setPass("xyzpqr");
+orm.setTabId(98);
+orm.setUserName("lazyapi");
+JSONProcessor jp = new JSONProcessor();
+System.out.println(jp.toJSONString(orm));
+
+
+// {"tabId":"98","userName":"lazyapi","pass":"xyzpqr"}
+</code></pre>
+              <footer class="bottom-text">
+                Variables annoted with <span class="keyword-lzy">@JSONIgnore</span>
+                are ignored during conversion.
+              </footer>
+
+              <div class="desc" style="margin-top: 20px;">
+                You can also convert <span class="keyword-lzy">java.sql.ResultSet</span>
+                to JSON directly.
+                <pre><code class="language-java">JSONProcessor jp = new JSONProcessor();
+Connection con = getConnection();
+Statement stmt = con.createStatement();
+ResultSet rs = stmt.executeQuery("select *from orm_tab_a");
+System.out.println(jp.toJSONArray(rs));
+
+
+// [{"tabid":"98","username":"lazyapi","pass":"xyzpqr"}, {...}, {...}]
+  </code></pre>
+                <footer class="bottom-text">
+                  In this case the json property names are determined
+                  from <span class="keyword-lzy">java.sql.ResultSetMetaData</span> and are lowercased.
+                </footer>
+            </div>
+          </div>
+
+
+
+          <div class="code-sample" id="exmp-fp">
+            <header>
+            Examples > FormProcessor
+            </header>
+            <div class="desc">
+              Developers still using Java Servlets, tend to write a lot of code that
+              converts HTML form data to Java Bean. With Lazy that can also be minimized.
+              <pre><code class="language-java">protected void doGetOrPost(HttpServletRequest req, HttpServletResponse) {
+  FormProcessor fp = new FormProcessor();
+  OrmTabMS orm = fp.toBean(req.getParameterMap(), OrmTabMS.class);
+}</code></pre>
+              <footer class="bottom-text">
+                Developers are required to send
+                <span class="keyword-lzy">req.getParameterMap()</span>
+                instead of <span class="keyword-lzy">req</span> itself
+                because that would make Lazy dependent on servlet-api.
+
+              </footer>
+            </div>
+          </div>
+
+          <!--
+            New div here
+          -->
 
         </div>
 
@@ -225,9 +315,16 @@ lazy.selectOne("select * from orm_tab_a", OrmTabMS.class)
     </div>
   </div>
 
+
+
+
+
   <script src="js/prism.js"></script>
-
-
+</div>
+<div class="page-footer">
+  <a href="https://github.com/rahulnjs" target="_blank">Rahul Sharma</a><br>
+  Developer
+</div>
 </body>
 
 </html>

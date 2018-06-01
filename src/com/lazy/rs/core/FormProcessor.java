@@ -4,8 +4,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-
 import com.lazy.rs.util.Util;
 
 /**
@@ -16,25 +14,14 @@ import com.lazy.rs.util.Util;
  */
 
 public class FormProcessor {
-	/**
-	 * Creates a bean for an HTML form which is being submitted.
-	 * 
-	 * @param request
-	 *            represents javax.servlet.http.HttpServletRequest
-	 * @param beanClass
-	 *            The type of object that is to be returned.
-	 * @return Object of type beanClass.
-	 */
-	public Object toBean(HttpServletRequest request, Class<?> beanClass) {
-		return toBean(request.getParameterMap(), beanClass);
-	}
+
 
 	/**
 	 * Creates a bean for an HTML form which is being submitted.
 	 * 
 	 * @param map
 	 *            represents
-	 *            javax.servlet.http.HttpServletRequest..getParameterMap()
+	 *            javax.servlet.http.HttpServletRequest.getParameterMap()
 	 * @param beanClass
 	 *            The type of object that is to be returned.
 	 * @return Object of type beanClass.

@@ -1,4 +1,4 @@
-package com.lazy.rs.core;
+package test;
 
 import java.lang.reflect.Field;
 import java.sql.ResultSet;
@@ -232,8 +232,6 @@ public class JSONProcessor {
 	 * @return JSON representation of ResultSet e.g. if ResultSet contains a row
 	 *         [first_name, last_name with values java, language] then returned
 	 *         JSON would be: {"first_name": "java", "last_name": "language"}
-	 *         
-	 * @note call rs.next() before calling this method        
 	 * 
 	 * */
 	public String resultSet2JSONString(ResultSet rs) {
@@ -287,20 +285,39 @@ public class JSONProcessor {
 	 * */
 
 	public String toJSONArray(List<? extends Object> list) {
-		return list == null ? "[]" : toJSONArray(list.toArray());
-	}
-	
-	/***
-	 * @param: arr, array of object to be converted to JSON
-	 * @return: JSON array for the input
-	 * */
-	public String toJSONArray(Object[] arr) {
-		if (arr == null) {
+		return toJSONArray(list.toArray());
+		/*if (list == null) {
 			return "[]";
 		}
 		String jArray = "[";
 		
-		for (Object obj : arr) {
+		for (Object obj : list) {
+			if (jArray.length() > 1) {
+				jArray += ", ";
+			}
+			Object val = obj;
+			Class<?> cls = val.getClass();
+			boolean primitive = isPrimitive(cls.getName());
+			if (!primitive) {
+				OType cType = getOType(cls);
+				val = getSubFieldValue(cType, val);
+				jArray += val;
+			} else {
+				val = normalizeForJSON(val);
+				jArray += "\"" + val + "\"";
+			}
+
+		}
+		return jArray + "]";*/
+	}
+	
+	public String toJSONArray(Object[] list) {
+		if (list == null) {
+			return "[]";
+		}
+		String jArray = "[";
+		
+		for (Object obj : list) {
 			if (jArray.length() > 1) {
 				jArray += ", ";
 			}
@@ -326,7 +343,29 @@ public class JSONProcessor {
 	 * */
 
 	public String toJSONArray(Set<? extends Object> set) {
-		return set == null ? "[]" : toJSONArray(set.toArray());
+		return toJSONArray(set.toArray());
+		/*if (set == null) {
+			return "[]";
+		}
+		
+		String jArray = "[";
+		for (Object obj : set) {
+			if (jArray.length() > 1) {
+				jArray += ", ";
+			}
+			Object val = obj;
+			Class<?> cls = val.getClass();
+			boolean primitive = isPrimitive(cls.getName());
+			if (!primitive) {
+				OType cType = getOType(cls);
+				val = getSubFieldValue(cType, val);
+				jArray += val;
+			} else {
+				val = normalizeForJSON(val);
+				jArray += "\"" + val + "\"";
+			}
+		}
+		return jArray + "]";*/
 	}
 
 	/***
