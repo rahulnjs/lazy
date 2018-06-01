@@ -5,10 +5,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-
 /**
- * Fields declared with @Ignore annotations are ignored during 
- * json parsing. 
+ * Fields declared with @Ignore annotations are ignored during json parsing.
+ * 
  * @author rahulnjs
  *
  */
@@ -17,15 +16,8 @@ import java.lang.annotation.Target;
 public @interface JsonIgnore {
 	/**
 	 * 
-	 * @return A string representing the justification for marking
-	 * a field as @JsonIgnore, can be empty.
+	 * @return A string representing the justification for marking a field as
+	 *         @JsonIgnore, can be empty.
 	 */
 	String value();
 }
-
-
-
-
-	
-	
-

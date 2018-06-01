@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css?family=Quicksand:400,500');
+@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600');
 
 
 body {
@@ -6,6 +7,10 @@ body {
   margin: 0;
   font-family: 'Quicksand', sans-serif;
 
+}
+
+pre {
+  font-size: 15px;
 }
 
 .page-header {
@@ -76,7 +81,7 @@ span.h1 {
 
 .text {
   line-height: 1.4;
-  font-size: 15px;
+  font-size: 1.1rem;
   color:#424949;
   padding-top: 20px;
 }
@@ -84,4 +89,32 @@ span.h1 {
 .text header {
   font-size: 1.6rem;
   margin-bottom: 15px;
+}
+
+
+
+.code-sample {
+  margin-top: 20px;
+
+}
+
+.code-sample header {
+  font-size: 1.3rem;
+  font-weight: 500;
+}
+
+.code-sample desc {
+
+}
+
+.bottom-text {
+  color: gray;
+  font-size: .9rem;
+}
+
+span.keyword-lzy {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 600;
+  font-size: 1.1rem;
+
 }

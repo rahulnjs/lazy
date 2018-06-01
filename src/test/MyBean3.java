@@ -11,7 +11,5 @@ public class MyBean3 {
 	public void setBn(String bn) {
 		this.bn = bn;
 	}
-	
-	
 
 }

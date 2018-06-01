@@ -6,14 +6,15 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Declares that a Java Bean represents a Relational Table 
+ * Declares that a Java Bean represents a Relational Table
+ * 
  * @author rahulnjs
  *
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface Table {
-	
+
 	/**
 	 * 
 	 * @return name of the table.

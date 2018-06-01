@@ -37,7 +37,7 @@
         <ul>
           <li><a href="#about">About</a></li>
           <li><a href="#getting-started">Getting Started</a></li>
-          <li><a href="#">Examples</a></li>
+          <li><a href="#examples">Examples</a></li>
           <li><a href="#">Contribution</a></li>
           <li><a href="#">Help</a></li>
         </ul>
@@ -63,17 +63,163 @@
           To use Lazy download the latest jar and add it to your classpath.
         </div>
 
-<pre><code class="language-java">public static void main(String[] args) throws SQLException {
-    Connection con = getMySqlCon();
-	OrmTabMS test = new OrmTabMS();
-	test.setTabId(1);
-	test.setUserName("Boom");
-	test.setPass("rootrs");
-	Lazy lazy = new Lazy(con);
-	System.out.println(lazy.update(test));
-	con.close();
+
+        <div id="examples" class="text">
+          <div class="code-sample">
+            <header>
+              Examples > Initialization
+            </header>
+            <div class="desc">
+              Lazy can be initialized in two ways,
+              <ul>
+                <li>With java.sql.Connection <br>
+<pre><code class="language-java">DataSource ds = getSomeDataSource();
+Lazy lazy = new Lazy(ds);
+</code></pre>
+                </li>
+                <li>With java.sql.DataSource<br>
+<pre><code class="language-java">Connection con = getConnection();
+Lazy lazy = new Lazy(con);
+</code></pre>
+                </li>
+              </ul>
+              <footer class="bottom-text">
+                Lazy curently supports Oracle and MySql databases. It automatically
+                determines Database Vendor from connection object. So you don't need
+                to make any particular changes for Lazy if you switch your db.
+                Lazy can be found in package <b>com.lazy.rs.core</b>
+              </footer>
+            </div>
+          </div>
+
+          <div class="code-sample">
+            <header>
+              Examples > Simple Bean Persistence
+            </header>
+            <div class="desc">
+              Lazy only supports Annotation configuration. To make a JavaBean
+              persistable annotate your class with <span class="keyword-lzy">@Table</span>.
+
+<pre><code class="language-java">@Table("orm_tab_a")
+public class OrmTabMS {
+
+  /**
+  * @Id annotation defines the id field
+  **/
+  @Id(keyType=KeyType.NATIVE, prefix="", sequence="", suffix="")
+  private int tabId;
+  private String userName;
+  private String pass;
+
+
+
+  public String getUserName() {
+	  return userName;
+  }
+
+  public void setUserName(String userName) {
+	  this.userName = userName;
+  }
+
+  public String getPass() {
+    return pass;
+  }
+
+  public void setPass(String pass) {
+  	this.pass = pass;
+  }
+
+  public int getTabId() {
+  	return tabId;
+  }
+
+  public void setTabId(int tabId) {
+  	this.tabId = tabId;
+  }
+
 }
 </code></pre>
+
+<div class="desc">
+
+Saving this bean to the Database is fairly simple.
+
+<pre><code class="language-java">OrmTabMS test = new OrmTabMS();
+test.setUserName("Obj2");
+test.setPass("obj-pass");
+Lazy lazy = new Lazy(con);
+System.out.println("Status: " + lazy.insert(test));
+System.out.println("Id: "+ test.getTabId());
+
+
+//Status: 1
+//Id: 1
+</code></pre>
+
+
+  <footer class="bottom-text">
+    Similarly
+    <span class="keyword-lzy">
+      lazy.update(test)
+    </span>
+     will update the value in the database.
+  </footer>
+
+
+</div>
+
+
+
+<div class="desc" style="margin-top: 20px;">
+
+Memeber variables decalred with <span class="keyword-lzy">@Ignore</span> annotation
+will not be persisted to database.
+<pre><code class="language-java">@Id(keyType=KeyType.NATIVE, prefix="", sequence="", suffix="")
+private int tabId;
+private String userName;
+private String pass;
+@Ignore("will be ignored during persistence")
+private String foo;
+</code></pre>
+
+
+  <footer class="bottom-text">
+  </footer>
+
+
+</div>
+
+
+              <footer class="bottom-text">
+
+              </footer>
+            </div>
+          </div>
+
+
+
+          <div class="code-sample">
+            <header>
+            Examples > Select Queries
+            </header>
+            <div class="desc">
+<pre><code class="language-java">//Returns list of objects.
+lazy.selectMany("select * from orm_tab_a", OrmTabMS.class)
+
+
+//Returns first object
+lazy.selectOne("select * from orm_tab_a", OrmTabMS.class)
+</code></pre>
+
+              <footer class="bottom-text">
+              </footer>
+            </div>
+          </div>
+
+
+
+
+        </div>
 
       </div>
     </div>
@@ -85,3 +231,21 @@
 </body>
 
 </html>
+
+
+
+<!--
+<pre><code class="language-java"></code></pre>
+
+
+<div class="code-sample">
+  <header>
+  Examples > Select Queries
+  </header>
+  <div class="desc">
+    <pre><code class="language-java"></code></pre>
+    <footer class="bottom-text">
+    </footer>
+  </div>
+</div>
+-->
