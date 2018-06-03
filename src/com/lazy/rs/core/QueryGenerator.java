@@ -107,29 +107,27 @@ public class QueryGenerator {
 		String qPart2 = " VALUES(";
 		int idAt = -1;
 		for (int i = 0; i < fields.length; i++) {
+			System.out.println(fields[i].getName());
 			if (!hasIgnoreAnnotation(fields[i])) {
 				if (!fields[i].getName().equals(meta.getPrimaryKey())) {
-					qPart1 += fields[i].getName().toUpperCase();
-					qPart2 += "?";
-					if (i != fields.length - 1) {
+					if (qPart1.charAt(qPart1.length() -1) != '(') {
 						qPart1 += ", ";
 						qPart2 += ", ";
 					}
+					qPart1 += fields[i].getName().toUpperCase();
+					qPart2 += "?";
 				} else {
 					idAt = i;
 				}
-				if (i == fields.length - 1) {
-					if (idAt != -1 && vendor != DBVendor.MYSQL) {
-						qPart1 += ", " + fields[idAt].getName().toUpperCase();
-						qPart2 += ", ?";
-					}
-					qPart1 += ")";
-					qPart2 += ")";
-				}
-
 			}
 
 		}
+		if (idAt != -1 && vendor != DBVendor.MYSQL) {
+			qPart1 += ", " + fields[idAt].getName().toUpperCase();
+			qPart2 += ", ?";
+		}
+		qPart1 += ")";
+		qPart2 += ")";
 		meta.setInsertQuery(qPart1 + qPart2);
 	}
 

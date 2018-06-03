@@ -221,7 +221,7 @@ public class JSONProcessor {
 			if(json.length() > 1) {
 				json += ",";
 			}
-			json += "'" + i + "'";
+			json += "\"" + i + "\"";
 		}
 		return json + "]";
 	}
