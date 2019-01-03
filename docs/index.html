@@ -81,12 +81,12 @@
             <div class="desc">
               Lazy can be initialized in two ways,
               <ul>
-                <li>With java.sql.Connection <br>
+                <li>With java.sql.DataSource <br>
 <pre><code class="language-java">DataSource ds = getSomeDataSource();
 Lazy lazy = new Lazy(ds);
 </code></pre>
                 </li>
-                <li>With java.sql.DataSource<br>
+                <li>With java.sql.Connection<br>
 <pre><code class="language-java">Connection con = getConnection();
 Lazy lazy = new Lazy(con);
 </code></pre>
