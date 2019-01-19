@@ -244,12 +244,13 @@ public class JSONProcessor {
 				if (json.length() != 1) {
 					json += ",";
 				}
-				String value = rs.getString(meta.getColumnName(i));
-				json += "\"" + meta.getColumnName(i).toLowerCase() + "\":\""
+				String value = rs.getString(meta.getColumnLabel(i));
+				json += "\"" + meta.getColumnLabel(i).toLowerCase() + "\":\""
 						+ normalizeForJSON(value) + "\"";
 			}
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
+			//System.out.println(e);
 			return null;
 		}
 		return json + "}";
