@@ -245,7 +245,7 @@ public class JSONProcessor {
 					json += ",";
 				}
 				String value = rs.getString(meta.getColumnLabel(i));
-				json += "\"" + meta.getColumnLabel(i).toLowerCase() + "\":\""
+				json += "\"" + normalizeForJSON(meta.getColumnLabel(i).toLowerCase()) + "\":\""
 						+ normalizeForJSON(value) + "\"";
 			}
 		} catch (Exception e) {
